@@ -1,8 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { AppBar, Toolbar, Typography, Button, Link, Box } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
+
 function Navbar({ title }) {
-  const isLoggedIn = localStorage.getItem("accessToken") !== null;
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    localStorage.getItem("accessToken") !== null
+  );
+
+  const handleLogout = () => {
+    localStorage.removeItem("accessToken");
+    setIsLoggedIn(false);
+  };
 
   return (
     <AppBar
@@ -27,23 +35,43 @@ function Navbar({ title }) {
         </Typography>
         <Box sx={{ display: "flex", alignItems: "center" }}>
           {isLoggedIn ? (
-            <Link
-              href="/user-profile"
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                border: "2px solid white",
-                borderRadius: "100%",
-                padding: "6px",
-              }}
-            >
-              <PersonIcon
+            <>
+              <Link
+                href="/user-profile"
                 sx={{
-                  color: "#fff",
-                  padding: "3px",
+                  display: "flex",
+                  alignItems: "center",
+                  border: "2px solid white",
+                  borderRadius: "100%",
+                  padding: "6px",
                 }}
-              />
-            </Link>
+              >
+                <PersonIcon
+                  sx={{
+                    color: "#fff",
+                    padding: "3px",
+                  }}
+                />
+              </Link>
+              <Button color="inherit" onClick={handleLogout}>
+                <Link
+                  href="/login"
+                  color="white"
+                  underline="none"
+                  px={3}
+                  py={1}
+                  sx={{
+                    backgroundColor: "darkred",
+                    marginLeft: "8px",
+                    fontWeight: "bold",
+                    borderRadius: "20px",
+                    color: "white",
+                  }}
+                >
+                  Logout
+                </Link>
+              </Button>
+            </>
           ) : (
             <Button color="inherit">
               <Link

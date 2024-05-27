@@ -11,6 +11,7 @@ import {
   Card,
   CardMedia,
   CardContent,
+  CircularProgress,
   Button,
 } from "@mui/material";
 import axios from "axios";
@@ -22,6 +23,7 @@ const PropertyPage = () => {
   const { id } = useParams();
   const [property, setProperty] = useState(null);
   const [interestedUser, setInterestedUser] = useState(null);
+  const [loading, setLoading] = useState(true); // Added loading state
 
   useEffect(() => {
     const fetchProperty = async () => {
@@ -32,6 +34,7 @@ const PropertyPage = () => {
           },
         });
         setProperty(response.data);
+        setLoading(false); // Set loading to false after data is fetched
       } catch (error) {
         console.error("Error fetching property details:", error);
       }
@@ -68,10 +71,15 @@ const PropertyPage = () => {
     arrows: false,
   };
 
-  if (!property) {
-    return <Typography>Loading...</Typography>;
+  if (loading) {
+    return (
+      <Container sx={{ marginTop: "20px" }}>
+        <Paper elevation={3} sx={{ padding: "20px" }}>
+          <CircularProgress sx={{ display: "block", margin: "auto" }} />
+        </Paper>
+      </Container>
+    );
   }
-
   return (
     <Container sx={{ marginTop: "20px" }}>
       <Paper elevation={3} sx={{ padding: "20px" }}>
@@ -167,7 +175,7 @@ const PropertyPage = () => {
                   gutterBottom
                   sx={{ marginTop: "20px" }}
                 >
-                  Interested User Details:
+                  Seller Details:
                 </Typography>
               )}
               {interestedUser && (
