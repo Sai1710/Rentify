@@ -1,5 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const Listing = require("../models/listingModel");
+const User = require("../models/userModel");
 
 //@desc Get specific Listing
 //@route GET /api/listings/:id
@@ -38,6 +39,21 @@ const deleteListing = asyncHandler(async (req, res) => {
   }
   await Listing.deleteOne({ _id: req.params.id });
   res.status(200).json({ message: "Listing deleted successfully" });
+});
+
+const getUser = asyncHandler(async (req, res) => {
+  const listing = await Listing.findById(req.params.id);
+  if (!listing) {
+    res.status(404);
+    throw new Error("Listing not found");
+  }
+  const user = await User.findById(listing.user_id);
+  res.status(200).json({
+    firstname: user.firstname,
+    lastname: user.lastname,
+    email: user.email,
+    phone: user.phone,
+  });
 });
 
 //@desc Update listing
@@ -110,4 +126,5 @@ module.exports = {
   createListing,
   updateListing,
   deleteListing,
+  getUser,
 };
